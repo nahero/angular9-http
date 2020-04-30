@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
 
-import { map } from "rxjs/operators";
 import { Post } from "./post";
+import { PostsService } from "./posts.service";
 
 @Component({
   selector: "app-root",
@@ -10,54 +9,29 @@ import { Post } from "./post";
   styleUrls: ["./app.component.css"],
 })
 export class AppComponent implements OnInit {
-  loadedPosts = [];
+  loadedPosts: Post[] = [];
+  isFetching = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private postsService: PostsService) {}
 
   ngOnInit() {
-    this.fetchPosts();
+    this.onFetchPosts();
   }
 
   onCreatePost(postData: Post) {
+    this.postsService.createPost(postData);
     console.log(postData);
-
-    // Send Http request
-    this.http
-      .post("https://ng2020-http.firebaseio.com/posts.json", postData)
-      .subscribe((responseData) => {
-        console.log(responseData);
-      });
   }
 
   onFetchPosts() {
-    this.fetchPosts();
+    this.isFetching = true;
+    this.postsService.fetchPosts().subscribe((posts) => {
+      this.loadedPosts = posts;
+      this.isFetching = false;
+    });
   }
 
   onClearPosts() {
     // Send Http request
-  }
-
-  private fetchPosts() {
-    // Send Http request
-    this.http
-      .get("https://ng2020-http.firebaseio.com/posts.json")
-      .pipe(
-        map((responseData: { [key: string]: Post }) => {
-          console.log("responseData: ", responseData);
-
-          const postsArray = [];
-
-          for (const key in responseData) {
-            if (responseData.hasOwnProperty(key)) {
-              postsArray.push({ ...responseData[key], id: key });
-            }
-          }
-
-          console.log("posts array: ", postsArray);
-        })
-      )
-      .subscribe((posts) => {
-        console.log(posts);
-      });
   }
 }

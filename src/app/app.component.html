@@ -1,4 +1,5 @@
 <div class="container">
+  <!-- Create post -->
   <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
       <form #postForm="ngForm" (ngSubmit)="onCreatePost(postForm.value)">
@@ -33,7 +34,10 @@
       </form>
     </div>
   </div>
+
   <hr />
+
+  <!-- Posts actions -->
   <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
       <button class="btn btn-primary" (click)="onFetchPosts()">
@@ -49,9 +53,25 @@
       </button>
     </div>
   </div>
+
+  <!-- Posts list -->
   <div class="row">
     <div class="col-xs-12 col-md-6 col-md-offset-3">
-      <p>No posts available!</p>
+      <!-- No posts -->
+      <p *ngIf="!loadedPosts.length && !isFetching">No posts available!</p>
+
+      <!-- Loading indicator-->
+      <p *ngIf="isFetching">
+        Loading posts...
+      </p>
+
+      <!-- Loaded posts -->
+      <ol class="list-group" *ngIf="loadedPosts.length > 0 && !isFetching">
+        <li *ngFor="let post of loadedPosts" class="list-group-item">
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.content }}</p>
+        </li>
+      </ol>
     </div>
   </div>
 </div>
