@@ -60,6 +60,12 @@
       <!-- No posts -->
       <p *ngIf="!loadedPosts.length && !isFetching">No posts available!</p>
 
+      <!-- Error -->
+      <div *ngIf="error" class="alert alert-danger">
+        <h3>There was an error!</h3>
+        <p>{{ error }}</p>
+      </div>
+
       <!-- Loading indicator-->
       <p *ngIf="isFetching">
         Loading posts...
@@ -70,6 +76,7 @@
         <li *ngFor="let post of loadedPosts" class="list-group-item">
           <h3>{{ post.title }}</h3>
           <p>{{ post.content }}</p>
+          <a class="btn btn-link" (click)="onGetPost(post.id)">Get post</a>
         </li>
       </ol>
     </div>

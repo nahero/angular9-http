@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Post } from "./post";
 import { map } from "rxjs/operators";
+import { Subject } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -9,6 +10,7 @@ import { map } from "rxjs/operators";
 export class PostsService {
   loadedPosts: Post[] = [];
   isFetching = false;
+  error = new Subject();
 
   constructor(private http: HttpClient) {}
 
@@ -52,8 +54,37 @@ export class PostsService {
         "https://ng2020-http.firebaseio.com/posts.json",
         postData
       )
-      .subscribe((responseData) => {
-        console.log(responseData);
+      .subscribe(
+        (responseData) => {
+          console.log(responseData);
+        },
+        (error) => {
+          this.error.next(error.message);
+        }
+      );
+  }
+
+  getPost(postID: string) {
+    this.http
+      .get("https://ng2020-http.firebaseio.com/posts.json/" + postID, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
+      .subscribe((post) => {
+        console.log(post);
       });
+  }
+
+  deletePost(post: Post) {
+    // return this.http.delete(
+    //   "https://ng2020-http.firebaseio.com/posts.json",
+    //   post.id
+    // );
+  }
+
+  clearPosts() {
+    return this.http.delete("https://ng2020-http.firebaseio.com/posts.json");
   }
 }
