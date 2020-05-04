@@ -1,4 +1,6 @@
-# NgCompleteGuideUpdate
+# Angular 9 - 2020 edition Udemy course sub-tutorial on HTTP requests, REST API, Firebase
+
+## NgCompleteGuideUpdate
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.5.
 
